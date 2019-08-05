@@ -1,3 +1,34 @@
+""" Performs tile registration, tile normalization using
+    precomputed values, tophat filtering, signal candida
+    -te detection and signal merging.
+
+    Parameters
+    ----------
+    sys.argv[1] : Path to pre-processing library
+    sys.argv[2] : Input csv file contaning an array of in-
+        put images
+    sys.argv[3] : Output folder where to store aligned im-
+        ages
+    sys.argv[4] : Output dataframe of signal candidate dete-
+        ction after merging
+    sys.argv[5] : Output dataframe of signal candidate dete-
+        ction before merging
+    sys.argv[6] : Number of thread used for parallelizing
+        sequencing rounds
+    sys.argv[7] : h maxima threshold
+    sys.argv[8] : csv file containing image normalization
+        intervals
+    sys.argv[9] : Output hdf5 object storing normalized im-
+        ages
+    sys.argv[10] : Output hdf5 object storing signal candi-
+        dates binary masks
+    sys.argv[11] : Type of registration procedure. (valid
+        arguments: "DO1" : if only the general stain of
+        the first sequencing round is available, "DO" : if
+        a general stain image is available for each sequen-
+        cing round
+"""
+
 import numpy as np
 import SimpleITK as sitk
 from skimage import io
@@ -18,7 +49,6 @@ path = sys.argv[3] #output folder
 path_csv=sys.argv[2] # csv file path
 n_threads=int(sys.argv[6])
 h_th=np.float(sys.argv[7])
-sigma=np.float(sys.argv[8])
 tile_csv=pd.read_csv(path_csv,sep='\t')
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 channels = 6
@@ -51,7 +81,7 @@ try:
     elastixImageFilter.SetParameterMap(parametersMap)
     transformixImageFilter = sitk.TransformixImageFilter()
  
-    if str(sys.argv[12])=="DO":
+    if str(sys.argv[11])=="DO":
         final_reg=RegistrationDO(final,parametersMap,elastixImageFilter,transformixImageFilter,cycles,channels,path,1,nbit) # 0 - not save, 1 - save
     else:
         final_reg=RegistrationDO1(final,parametersMap,elastixImageFilter,transformixImageFilter,cycles,channels,path,1,nbit)
@@ -65,14 +95,13 @@ except RuntimeError:
 #IMAGE NORMALIZATION
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 print("[INFO] Image Normalization....................................................................................................................")
-mode_array = pickle.load(open(sys.argv[9], 'rb'))
-#if mode array already exists
-final_norm=np.zeros(final_reg.shape).astype(np.float64) #initialization final matrix of normalized images
+mode_array = pickle.load(open(sys.argv[8], 'rb'))
+final_norm=np.zeros(final_reg.shape).astype(np.float64)
 for cycle in range(cycles):
     for ch in range(channels):
         if ch!=1:
             final_norm[cycle,ch,:,:]=((final_reg[cycle,ch,:,:].astype(np.int32)-mode_array[cycle,ch,0]).astype(np.float64))/(mode_array[cycle,ch,1] - mode_array[cycle,ch,0])
-hdf5_path = sys.argv[10]
+hdf5_path = sys.argv[9]
 hdf5_file = tables.open_file(hdf5_path, mode='w')
 data_storage = hdf5_file.create_array(hdf5_file.root, 'final_norm', final_norm)
 hdf5_file.close()
@@ -82,7 +111,6 @@ final_norm[final_norm<0]=0
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 print("[INFO] Candidates Extraction....................................................................................................................")
 candidates_max=np.zeros(final_norm.shape).astype('uint16')
-#higher_contrast_points=np.zeros(final_norm.shape).astype('uint16') #mask with max points having an higher contrast (noise is discarded)
 
 for cycle in range(cycles):
     for ch in range(channels-1):
@@ -93,23 +121,23 @@ for cycle in range(cycles):
         else:
             try:
                 if ch==0:
-                    candidates_max[cycle,ch,:,:]=ExtractCandidates(final_norm[cycle,ch,:,:], h_th*0.9, radius,nbit, sigma)
+                    candidates_max[cycle,ch,:,:]=ExtractCandidates(final_norm[cycle,ch,:,:], h_th*0.9, radius,nbit)
                     print(len(candidates_max[cycle,ch,:,:][candidates_max[cycle,ch,:,:]!=0]))
                 else:
-                    candidates_max[cycle,ch,:,:]=ExtractCandidates(final_norm[cycle,ch,:,:], h_th, radius,nbit, sigma)
+                    candidates_max[cycle,ch,:,:]=ExtractCandidates(final_norm[cycle,ch,:,:], h_th, radius,nbit)
                     print(str(cycle)+" "+str(ch)+" "+str(len(candidates_max[cycle,ch,:,:][candidates_max[cycle,ch,:,:]!=0])))
             except ValueError:
                print("ERROR: Extract candidates")
                sys.exit(0)
 
-hdf5_path = sys.argv[11]
+hdf5_path = sys.argv[10]
 hdf5_file = tables.open_file(hdf5_path, mode='w')
 data_storage = hdf5_file.create_array(hdf5_file.root, 'candidates_max', candidates_max)
 hdf5_file.close()
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
-#SIGNALS MERGING AND INPUT CREATION (IF NO CROSS-TALK COMPENSATION)
+#SIGNALS MERGING
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 print("[INFO] Signal Merging..........................................................................................................................")
 res=findCorrespondencesMax_createInputs(candidates_max,final_norm,cycles,channels,nbit,n_threads,radius)

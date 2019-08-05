@@ -1,3 +1,15 @@
+""" Signal candidate probability predictions.
+    
+    Parameters
+    ----------
+    sys.argv[1] : Path to signal probability prediction library
+    sys.argv[2] : Input dataframe of signal candidate detection
+        after merging
+    sys.argv[3] : Output dataframe of signal probability predictions
+    sys.argv[4] : (Optional) probability threshold for signal candid-
+            date predictions
+"""
+
 from keras.models import model_from_json
 import pandas as pd
 import numpy as np

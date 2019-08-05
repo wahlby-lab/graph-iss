@@ -5,7 +5,7 @@ from .pgm.max_flow_min_cost import runMaxFlowMinCost
 from scipy.ndimage.filters import gaussian_filter
 from scipy.spatial import cKDTree as KDTree
 
-def signalDecoding(data, d_th, k1, k2, k3, k4, tagList, n_threads, dth_max, prior):   
+def signalDecoding(data, d_th, k1, tagList, n_threads, dth_max, prior):   
     print("Starting signal decoding......") 
     data = data.rename(index=str, columns={"cycle":"hyb", "Intensities_window_5x5":"Image", "prob_DNN":"p1", "x":"x", "y":"y", "z":"z"})
 
@@ -27,7 +27,7 @@ def signalDecoding(data, d_th, k1, k2, k3, k4, tagList, n_threads, dth_max, prio
     data = data.reset_index(drop=True)
     data = data[['hyb','ch','Image','Imax','Imax_gf','p1','p0','x','y','z']]
      
-    res = runMaxFlowMinCost(data, d_th, k1, k2, tagList, n_threads, dth_max, prior)
+    res = runMaxFlowMinCost(data, d_th, k1, tagList, n_threads, dth_max, prior)
     
     return res
 

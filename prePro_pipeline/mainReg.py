@@ -1,3 +1,30 @@
+""" Course registration.
+
+    Parameters
+    ----------
+    sys.argv[1] : Path to pre-processing library
+    sys.argv[2] : Output folder where to store aligned images
+    sys.argv[3] : Input csv file contaning an array of input images
+    sys.argv[4] : Number of resolution levels used for registration
+    sys.argv[5] : Type of registration (valid arguments: "translati-
+        on", "rigid", or "affine")
+    sys.argv[6] : String flag that enables sequencing rounds registra-
+        tion using maximum projected images of general stain and
+        nuclei channel if enabled. Genaral stain images only are used
+        if disabled. (valid arguments: "Nuclei": feature enabled,
+        other string: feature disabled)
+    sys.argv[7] : Type of registration procedure. (valid arguments:
+        "DO1" : if only the general stain of the first sequencing round
+        is available
+        "DO" : if a general stain image is available for each sequencing
+        round
+    sys.argv[8] : highest resolution level for multiresolution image reg-
+        istration
+    sys.argv[9] : lower resolution level for multiresolution image regi-
+        stration
+    sys.argv[10] : flag to enable BSpline registration after rigid
+"""
+
 import SimpleITK as sitk
 from skimage import io
 import numpy as np

@@ -16,7 +16,7 @@ def faster_mode1D(a):
         return v[pos], c[pos]
 
 
-def ExtractCandidates(im_norm,h,radius,nbit, sigma):
+def ExtractCandidates(im_norm,h,radius,nbit):
     """extract signal candidates applying h_maxima transform 
         INPUTS:
         im_norm=normalised image,

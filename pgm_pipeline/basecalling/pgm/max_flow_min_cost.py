@@ -10,7 +10,7 @@ import itertools
 def prob2Eng(p):
 	return -1.0 * np.log(np.clip(p,0.00001,0.99999))
 
-def runComponent(data, l, d_th, k1, k2, tagList, num_hyb, dth_max, prior):
+def runComponent(data, l, d_th, k1, tagList, num_hyb, dth_max, prior):
     if len(data[data.conn_comp ==l]):
         if len(np.unique(data[data.conn_comp ==l].hyb))==len(num_hyb):
             data_tmp = data[data.conn_comp ==l].sort_values(['hyb']).copy()
@@ -44,8 +44,7 @@ def runComponent(data, l, d_th, k1, k2, tagList, num_hyb, dth_max, prior):
                             # create transition var only if two signals are close enough
                             fI = np.absolute(np.float64(row_i.Imax_gf)-np.float64(row_j.Imax_gf))
                             mu_d = 1/ (1 + k1 * d)
-                            mu_I = mu_d / (1 + k2 * fI)
-                            Tvar_tmp = Tvar_tmp.append(pd.Series([X_idx_tmp,data_i_idx,data_j_idx, prob2Eng(1-mu_d), prob2Eng(mu_d), mu_d, mu_I],index=['x_idx','anchestor_x_idx', 'descendant_x_idx','E_0', 'E_1', 'mu_D', 'mu_I']),ignore_index=True)
+                            Tvar_tmp = Tvar_tmp.append(pd.Series([X_idx_tmp,data_i_idx,data_j_idx, prob2Eng(1-mu_d), prob2Eng(mu_d), mu_d],index=['x_idx','anchestor_x_idx', 'descendant_x_idx','E_0', 'E_1', 'mu_D']),ignore_index=True)
                             X_idx_tmp=X_idx_tmp+1;
         
             if prior=="prior":
@@ -146,7 +145,7 @@ def runComponent(data, l, d_th, k1, k2, tagList, num_hyb, dth_max, prior):
             return {'G': G, 'Dvar': Dvar_tmp, 'Tvar': Tvar_tmp}
         
 
-def runMaxFlowMinCost(data, d_th, k1, k2, tagList, n_threads, dth_max, prior):
+def runMaxFlowMinCost(data, d_th, k1, tagList, n_threads, dth_max, prior):
     print("Generate Graph Model..."+" ("+datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+") "+"\n")
     num_hyb=np.arange(1,int(np.amax(data.hyb))+1)
     data.sort_values('hyb', inplace=True)
@@ -186,6 +185,6 @@ def runMaxFlowMinCost(data, d_th, k1, k2, tagList, n_threads, dth_max, prior):
     if labels.size>0:
         res = []
         for l in tqdm(np.nditer(labels),total=len(labels)):
-            res.append(runComponent(data,int(l), d_th, k1, k2, tagList, num_hyb, dth_max, prior))
+            res.append(runComponent(data,int(l), d_th, k1, tagList, num_hyb, dth_max, prior))
         #return maxFlowMinCost
         return [x for x in res if x is not None]

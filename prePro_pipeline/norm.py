@@ -1,3 +1,17 @@
+""" Compute normalization intervals for each channel and round.
+    
+    Parameters
+    ----------
+    sys.argv[1] : input csv file contaning an array of input images
+    sys.argv[2] : upper percentile value of 98th percentile distri-
+        bution of image patches for signal level estimation.
+    sys.argv[3] : number of running threads. Each thread run over 
+        an image.
+    sys.argv[4] : output csv file where to store computed intervals
+    sys.argv[5] : number of random patches used to estimate norma-
+        lization intervals
+"""
+
 import numpy as np
 from skimage import io
 from scipy import stats

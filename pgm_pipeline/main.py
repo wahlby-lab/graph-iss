@@ -1,3 +1,29 @@
+""" Graph-based decoding of signal candidates.
+
+    Parameters
+    ----------
+    sys.argv[1] : Path to decoding library
+    sys.argv[2] : Dataframe of signal probability predictions
+    sys.argv[3] : Output file stroring dataframe of decoded
+        barcodes
+    sys.argv[4] : Output csv file of decoded barcodes
+    sys.argv[5] : Number of threads for parallelization
+    sys.argv[6] : d_th parameter for building graph connected
+        components
+    sys.argv[7] : d_max parameter for building graph connected
+        components
+    sys.argv[8] : Output list of sets of signals detections contribu-
+        ting to decoded barcodes
+    sys.argv[9] : enable barcodes decoding guided by the list
+        of targeted barcodes (valid arguments, "prior": feature
+        enabled, other string: feature disabled)
+    sys.argv[10] : csv file of targeted barcode sequences
+    sys.argv[11] : Dataframe of signal candidate detection befo-
+        re merging
+    sys.argv[12] : hdf5 object storing normalized images
+    sys.argv[13] : Path to signal probability prediction library
+"""
+
 import numpy as np
 import pandas as pd
 import itertools
@@ -64,7 +90,7 @@ DNN_model.load_weights(net_path+model_name+'_weights')
 d_th=float(sys.argv[6])
 cycles=dataset.cycle.max()+1
 try:
-    res = signalDecoding(dataset, d_th, k1=0.33, k2=0.1, k3=0.4, k4=0.8, tagList=tags, n_threads = int(sys.argv[5]), dth_max=float(sys.argv[7]), prior=sys.argv[9])
+    res = signalDecoding(dataset, d_th, k1=0.33, tagList=tags, n_threads = int(sys.argv[5]), dth_max=float(sys.argv[7]), prior=sys.argv[9])
 except ValueError:
     sys.exc_info()
     sys.exit(0)

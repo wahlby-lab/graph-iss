@@ -3,7 +3,7 @@
 //$POST echo -e "Running time:\n$startdate -> $( date )"
 //$OPT  --wrapper anduril-wrapper-slurm --threads 20
 //$OPT --java-heap 4096
-//$OPT -d <RESULT-FOLDER>
+//$OPT -d ./result_ISS_Anduril_Pipeline_Example
 
 import anduril.builtin._
 import anduril.tools._
@@ -18,31 +18,27 @@ object pipeline {
 	predProb_pipeline_path._execute = "once"
         val pgm_pipeline_path = INPUT(path="<GRAPH-ISS-FOLDER>/pgm_pipeline")
 	pgm_pipeline_path._execute = "once"	
-        val postpro_pipeline_path = INPUT(path="<GRAPH-ISS-FOLDER>/postPro_pipeline")
-	postpro_pipeline_path._execute = "once"
-        val dataset_folder = INPUT(path="<DATA-FOLDER>")
+        val dataset_folder = INPUT(path="<DATA-FOLDER>/raw_data")
 	dataset_folder._execute = "once"
-        val tagList = INPUT(path="<TAGLIST-FILE>")
+        val tagList = INPUT(path="<DATA-FOLDER>/raw_data/tagList.csv")
 
 	val img_array = Folder2Array(folder1=dataset_folder, keyMode="number", filePattern="(.*).tif", excludePattern=".*Transformed")
 	val img_CSV = Array2CSV(img_array)
 	val mode_percent = BashEvaluate(var1=prepro_pipeline_path, var2=img_CSV, script="""source activate pgm_pipeline
-				python -W ignore -u @var1@/norm.py @var2@ 99 $( getmetadata "custom_cpu" ) @out1@ 50000
+				python -W ignore -u @var1@/norm.py @var2@ 99 $( getmetadata "custom_cpu" ) @out1@ 5000
 				source deactivate""")
 	mode_percent._custom("cpu") ="2"
-        mode_percent._custom("partition") = "-p p16"
 
         // REGISTRATION
-        val registration = BashEvaluate(var1=prepro_pipeline_path, var2=img_CSV, param1="5", param2="rigid", param3="Nuclei", param4="DO", script="""source activate pgm_pipeline
-                              python -u @var1@/mainReg.py @var1@ @folder1@ @var2@ @param1@ @param2@ @param3@ @param4@ "512" "8" "noBspline"
+        val registration = BashEvaluate(var1=prepro_pipeline_path, var2=img_CSV, param1="3", param2="rigid", param3="Nuclei", param4="DO", script="""source activate pgm_pipeline
+                              python -u @var1@/mainReg.py @var1@ @folder1@ @var2@ @param1@ @param2@ @param3@ @param4@ "1" "3" "noBspline"
                               source deactivate """)
-        registration._custom("partition") = "-p p32"
         val regImg_array = Folder2Array(registration.folder1)
         val reg_CSV = Array2CSV(regImg_array)
 	
 	// TILING
-	var tile_size_x="1024"
-        var tile_size_y="1024"
+	var tile_size_x="1330"
+        var tile_size_y="980"
 	val tileMap = NamedMap[BashEvaluate]("tiles")
 	val tileArrayMap = NamedMap[Folder2Array]("tilesArray")
 	val tileCSVMap = NamedMap[Array2CSV]("tilesCSV")
@@ -66,7 +62,7 @@ object pipeline {
 				// PREPROCESSING
 				info("Processing tile %s.....".format(r))
 				val prePro = BashEvaluate(var1=prepro_pipeline_path, var2=tile, var3=mode_percent.out1, param1="DO", script="""source activate pgm_pipeline
-						python -u @var1@/main_markus.py @var1@ @var2@ @folder1@ @out1@ @out2@ $( getmetadata "custom_cpu" ) 0.05 50 @var3@ @out3@ @folder2@/candidates_max.h5 @param1@
+						python -u @var1@/main.py @var1@ @var2@ @folder1@ @out1@ @out2@ $( getmetadata "custom_cpu" ) 0.05 @var3@ @out3@ @folder2@/candidates_max.h5 @param1@
 						source deactivate """) 
 				prePro._custom("cpu") ="4"
 
@@ -77,7 +73,7 @@ object pipeline {
 
 				// GRAPH DECODING
 				val GM = BashEvaluate(var1=pgm_pipeline_path, var2=predProb.out1, var3=tagList, var4=prePro.out2, var5=prePro.out3, var6=predProb_pipeline_path, script="""source activate pgm_pipeline
-						python -u @var1@/mainSSBA.py @var1@ @var2@ @out2@ @out1@ $( getmetadata "custom_cpu" ) 3 4 @out3@ blind @var3@ @var4@ @var5@ @var6@
+						python -u @var1@/main.py @var1@ @var2@ @out2@ @out1@ $( getmetadata "custom_cpu" ) 3 4 @out3@ blind @var3@ @var4@ @var5@ @var6@
 						source deactivate""")
 				GM._custom("cpu") = "1"
 
