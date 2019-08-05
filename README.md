@@ -1,7 +1,7 @@
 # graph-ISS
 Graph-based Decoding for In Situ Sequencing (ISS).
 
-This repository contains the primary source code implementation of the graph-based image analysis pipeline for processing in situ sequencing data and ipython noteobooks for reproducing publication analysis results and figures [ref].
+This repository contains the primary source code implementation of the graph-based image analysis pipeline for processing in situ sequencing data and ipython notebooks for reproducing publication analysis results and figures [ref].
 The image decoding pipeline consists in three Python 3 library packages for 2D and 3D data proccesing and a Anduril2 [2] pipeline implementing the decoding workflow.
 
 [2] *Cervera, Alejandra, et al. "Anduril 2: upgraded large-scale data integration framework." Bioinformatics (2019).*
@@ -11,7 +11,7 @@ The image decoding pipeline consists in three Python 3 library packages for 2D a
 Anduril 2 is a workflow platform for high-throughput analysis of biomedical data. Workflows are constructed using Scala 2.11 and executed in parallel locally or on Linux clusters using a workflow engine optimized for iterative development. Documentation and installation instructions are available at: http://anduril.org.
 
 #### Bio-Format Command Line Tools
-Bio-format command line tools are necessary for dividing whole slide images in smaller tiles for faster computating. Bio-format command line tools can be downloaded from https://www.openmicroscopy.org/bio-formats.
+Bio-format command line tools are necessary for dividing whole slide images in smaller tiles for faster computation. Bio-format command line tools can be downloaded from https://www.openmicroscopy.org/bio-formats.
 
 #### Python Library Requirements
 Create a conda evironment named "pgm_pipeline":
@@ -63,7 +63,7 @@ An example ISS data [3] for testing Anduril decoding pipeline and decoding resul
 [3] *Ke, Rongqin, et al. "In situ sequencing for RNA analysis in preserved tissue and cells." Nature methods 10.9 (2013): 857.*
 
 ### Anduril Pipeline Example Usage
-`ISS_Anduril_Pipeline_Example.scala` and `ISS_Anduril_Pipeline_3D_Example.scala` are respectively 2D and 3D Anduril decoding pipeline examples. For running a test example, `<GRAPH-ISS-FOLDER>` and `<DATA-FOLDER>` strings in the scala files should be replaced respectively with graph-iss and downloaded data folder local paths.
+An example of 2D Anduril decoding pipeline is availabel for testing (`ISS_Anduril_Pipeline_Example.scala`). For running the test example, `<GRAPH-ISS-FOLDER>` and `<DATA-FOLDER>` strings in the scala file should be replaced respectively with graph-iss and downloaded data folder local paths.
 
 To lunch the execution, run the command:
 
