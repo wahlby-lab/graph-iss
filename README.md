@@ -1,8 +1,10 @@
 # graph-ISS
 Graph-based Decoding for In Situ Sequencing (ISS).
 
-This repository contains the primary source code implementation of the graph-based image analysis pipeline for processing in situ sequencing data and ipython notebooks for reproducing publication analysis results and figures [ref].
+This repository contains the primary source code implementation of the graph-based image analysis pipeline for processing in situ sequencing data and ipython notebooks for reproducing publication analysis results and figures [1].
 The image decoding pipeline consists in three Python 3 library packages for 2D and 3D data proccesing and a Anduril2 [2] pipeline implementing the decoding workflow.
+
+[1] Partel, G. <em>et al.</em> Identification of spatial compartments in tissue from in situ sequencing data. BioRxiv, https://doi.org/10.1101/765842, (2019).
 
 [2] *Cervera, Alejandra, et al. "Anduril 2: upgraded large-scale data integration framework." Bioinformatics (2019).*
 
