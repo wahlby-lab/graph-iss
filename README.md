@@ -6,7 +6,7 @@ The image decoding pipeline consists in three Python 3 library packages for 2D a
 
 [1] Partel, G. <em>et al.</em> Identification of spatial compartments in tissue from in situ sequencing data. BioRxiv, https://doi.org/10.1101/765842, (2019).
 
-[2] *Cervera, Alejandra, et al. "Anduril 2: upgraded large-scale data integration framework." Bioinformatics (2019).*
+[2] Cervera, A. <em>et al.</em> Anduril 2: upgraded large-scale data integration framework. Bioinformatics, (2019).
 
 ### Decoding Pipeline Install Requirements
 #### Anduril2
