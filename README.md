@@ -1,3 +1,6 @@
+[![bioRxiv shield](https://img.shields.io/badge/bioRxiv-10.1101/765842-red.svg)](https://doi.org/10.1101/765842)
+[![DOI](https://zenodo.org/badge/199853991.svg)](https://zenodo.org/badge/latestdoi/199853991)
+
 # graph-ISS
 Graph-based Decoding for In Situ Sequencing (ISS).
 
@@ -11,6 +14,8 @@ The image decoding pipeline consists in three Python 3 library packages for 2D a
 ### Decoding Pipeline Install Requirements
 #### Anduril2
 Anduril 2 is a workflow platform for high-throughput analysis of biomedical data. Workflows are constructed using Scala 2.11 and executed in parallel locally or on Linux clusters using a workflow engine optimized for iterative development. Documentation and installation instructions are available at: http://anduril.org.
+##### Anduril2 OS Requirements
+*Linux* operating systems
 
 #### Bio-Format Command Line Tools
 Bio-format command line tools are necessary for dividing whole slide images in smaller tiles for faster computation. Bio-format command line tools can be downloaded from https://www.openmicroscopy.org/bio-formats.
