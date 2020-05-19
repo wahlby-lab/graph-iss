@@ -7,15 +7,31 @@ Graph-based Decoding for In Situ Sequencing (ISS).
 This repository contains the primary source code implementation of the graph-based image analysis pipeline for processing in situ sequencing data and ipython notebooks for reproducing publication analysis results and figures [1].
 The image decoding pipeline consists in three Python 3 library packages for 2D and 3D data proccesing and a Anduril2 [2] pipeline implementing the decoding workflow.
 
+If Anduril2 is not available for your operating system (e.g Windows machines) or your are not confident with Scala programming language, an alternative implementation of the decoding workflow is available in the form of Jupyter [notebook](notebooks/GraphISS_pipeline.ipynb)
+
 [1] Partel, G. <em>et al.</em> Identification of spatial compartments in tissue from in situ sequencing data. BioRxiv, https://doi.org/10.1101/765842, (2019).
 
 [2] Cervera, A. <em>et al.</em> Anduril 2: upgraded large-scale data integration framework. Bioinformatics, (2019).
 
-### Decoding Pipeline Install Requirements
-#### Anduril2
+### Install Requirements
+#### Anduril2 Pipeline
 Anduril 2 is a workflow platform for high-throughput analysis of biomedical data. Workflows are constructed using Scala 2.11 and executed in parallel locally or on Linux clusters using a workflow engine optimized for iterative development. Documentation and installation instructions are available at: http://anduril.org.
 ##### Anduril2 OS Requirements
 *Linux* operating systems
+
+#### Jupyter pipeline
+A Jupyter installation is required inside the same python evironment ("pgm_pipeline") used for running graph-ISS python modules (see [Python Library Requirements](#python-library-requirements)). The Jupyter pipeline makes use of IPython Parallel (https://ipyparallel.readthedocs.io/) for processing multiple image tiles in parallel. To install Ipython Parallel run the following command in the jupyter environment ("pgm_pipeline").
+
+```conda install ipyparallel```
+
+Once installed, we can start `N` different engines for running in parallel multiple tiles, specifically one for each engine started. As a general rule of thumb, reserve for each engine as many cores as many imaging rounds, in order to also benefit from the python modules parallelization for processing imaging rounds in parallel. For example, on a workstation with 12 cores and a dataset with 4 imaging rounds, we can start 3 engines, each processing one tile with 4 threads.
+Run the following command to activate the engines:
+
+```ipcluster start -n <N>```
+
+and wait until you see this message printed before starting to execute the Jupyter pipeline:
+
+```[IPClusterStart] Engines appear to have started successfully```
 
 #### Bio-Format Command Line Tools
 Bio-format command line tools are necessary for dividing whole slide images in smaller tiles for faster computation. Bio-format command line tools can be downloaded from https://www.openmicroscopy.org/bio-formats.
