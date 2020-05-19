@@ -56,8 +56,9 @@ Install the following python packages:
   - `scipy==0.19.1`
   - `pytables==3.4.2`
   - `tqdm==4.32.2`
+  - `R==4.0`
   
-Install `SimpleElastix` inside the virtual environment following installation instructions and documentation available at https://simpleelastix.readthedocs.io. For building and installing `SimpleElastix` with `Python 3.X` follow this wiki: https://github.com/rcasero/pysto/wiki/Build-and-install-SimpleElastix-for-python-3.x
+Install `SimpleElastix` (https://simpleelastix.readthedocs.io)  inside the virtual environment following installation instructions available [here](wiki/Build-and-install-SimpleElastix.md).
 
 To deactivate the conda enviroment:
 
