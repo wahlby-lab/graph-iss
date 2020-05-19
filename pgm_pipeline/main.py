@@ -54,7 +54,7 @@ try:
         
         final_norm=final_norm[:,:,np.newaxis,:,:]
     dataset.drop_duplicates(['cycle','ch','x','y','z'], inplace=True)
-except EOFError:
+except (EOFError, FileNotFoundError):
     f = open(sys.argv[4],'w')
     f.write('letters,global_X_pos,global_Y_pos,tile_ID,max_dist,seq_quality_min')
     f.close()

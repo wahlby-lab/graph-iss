@@ -22,7 +22,7 @@ try:
     m=pd.read_pickle(sys.argv[2])
     if len(m)==0:
         sys.exit(0)
-except EOFError:
+except (EOFError, FileNotFoundError):
     sys.exit(0)
 
 x_data=m['Intensities_window_5x5'] 

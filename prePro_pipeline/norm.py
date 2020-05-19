@@ -59,7 +59,7 @@ def runParallel(row,seed):
 imgCSV = pd.read_csv(sys.argv[1],sep='\t')
 n_chs = 6
 n_cycles = int(len(imgCSV)/6)
-seed = np.random.random_integers(1,100)
+seed = np.random.randint(1,100)
 res = Parallel(n_jobs=int(sys.argv[3]))(delayed(runParallel)(row,seed) for i, row in imgCSV.iterrows())
 
 img_stats = np.zeros((n_cycles, n_chs, 2))

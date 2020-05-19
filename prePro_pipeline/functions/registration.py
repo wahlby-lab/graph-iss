@@ -46,7 +46,7 @@ def RegistrationDO(images,parametersMap,elastixImageFilter,transformixImageFilte
     
     reg_imgs=np.zeros(images.shape).astype(nbit)         
     
-    ref_DO=sitk.GetImageFromArray(images[0,0,:,:]) #first DO+Nuclei taken as reference and saved in the matrix 
+    ref_DO=sitk.GetImageFromArray(images[0,0,:,:]) #first DO taken as reference and saved in the matrix 
     reg_imgs[0,0,:,:]=images[0,0,:,:] #saving DO first cycle (no MIP)
     
     #first registration (ch to respective DO)
@@ -66,10 +66,10 @@ def RegistrationDO(images,parametersMap,elastixImageFilter,transformixImageFilte
             if all([save==1 , cycle == 0]): ######
                 io.imsave(path+'/reg_ch'+str(ch)+'0.tif',reg_imgs[cycle,ch,:,:]) #to save channels registered images of the first cycle
     
-    ref_DO=sitk.GetImageFromArray(images[0,0,:,:]) #first DO+Nuclei taken as reference and saved in the matrix
+    ref_DO=sitk.GetImageFromArray(images[0,0,:,:]) #first DO taken as reference and saved in the matrix
     elastixImageFilter.SetFixedImage(ref_DO)   
     for cycle in range(1,cycles):
-        DO_toreg=sitk.GetImageFromArray(images[cycle,0,:,:]) #register DO+Nuclei
+        DO_toreg=sitk.GetImageFromArray(images[cycle,0,:,:]) #register DO
         elastixImageFilter2 = sitk.ElastixImageFilter()
         parametersMap2=sitk.GetDefaultParameterMap('rigid')
         parametersMap2=SetRegParameters(parametersMap2)

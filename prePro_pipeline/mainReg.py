@@ -1,4 +1,4 @@
-""" Course registration.
+""" Coarse registration.
 
     Parameters
     ----------
