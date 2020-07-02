@@ -6,7 +6,7 @@ norm_exp_tab <-  read.table('../data/results/residuals.csv', sep=",",stringsAsFa
 scaled_exp_tab <-  read.table('../data/results/scaled.csv', sep=",",stringsAsFactors=F,header=T,row.names = 1)
 
 
-sample_df <- read.table('../data/results/sample_info.csv', sep=",",stringsAsFactors=F,header=T,row.names = 1)
+sample_df <- read.table('../data/results/sample_info_de.csv', sep=",",stringsAsFactors=F,header=T,row.names = 1)
 
 sobj <- CreateSeuratObject(counts = exp_tab)
 # Normalized data
@@ -23,7 +23,7 @@ clusters = unique(sample_df$top_cluster)
 
 # Find Cluster BioMarkers
 marker.tables <- vector(mode = "list", length = n_clusters)
-for (i in c(0:(n_clusters-1))) {
+for (i in clusters) {
 	markers <- FindMarkers(sobj, i, clusters[clusters!=i], only.pos = TRUE,  slot="scale.data", min.pct = 0.25, logfc.threshold = 0.25)
         df <- as.data.frame(markers)
 	df$Gene <- rownames(df)
@@ -48,7 +48,7 @@ Idents(object = sobj) <- colnames(x = clustering.results)[ncol(x = clustering.re
 sobj[['seurat_clusters']] <- Idents(object = sobj)
 
 marker.tables <- vector(mode = "list", length = n_clusters)
-for (i in c(0:(n_clusters-1))) {
+for (i in clusters) {
 	markers <- FindMarkers(sobj,i,i+n_clusters, slot="scale.data",  min.pct = 0.25, logfc.threshold = 0.25)
 	df <- as.data.frame(markers)
 	df$Gene <- rownames(df)

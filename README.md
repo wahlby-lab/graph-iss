@@ -1,5 +1,5 @@
 [![bioRxiv shield](https://img.shields.io/badge/bioRxiv-10.1101/765842-red.svg)](https://doi.org/10.1101/765842)
-[![DOI](https://zenodo.org/badge/199853991.svg)](https://zenodo.org/badge/latestdoi/199853991)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3928110.svg)](https://doi.org/10.5281/zenodo.3928110)
 
 # graph-ISS
 Graph-based Decoding for In Situ Sequencing (ISS).
@@ -80,9 +80,10 @@ The following python packages are required for running the notebooks:
   - `SpatialDE==1.1.3`
   - `tqdm==4.32.2`
   - `umap-learn==0.3.9`
+  - `scanpy[leiden]==1.5.1`
 
 ### Data Download
-An example ISS data [3] for testing Anduril decoding pipeline and decoding results for reproducing publication analyses can be downloaded from: https://doi.org/10.5281/zenodo.3357950.
+An example ISS data [3] for testing Anduril decoding pipeline and decoding results for reproducing publication analyses can be downloaded from: https://doi.org/10.5281/zenodo.3928110
 
 [3] *Ke, Rongqin, et al. "In situ sequencing for RNA analysis in preserved tissue and cells." Nature methods 10.9 (2013): 857.*
 
